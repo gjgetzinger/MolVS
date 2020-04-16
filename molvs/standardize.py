@@ -211,7 +211,43 @@ class Standardizer(object):
         mol = self.tautomer_parent(mol, skip_standardize=True)
         mol = self.standardize(mol)
         return mol
-
+    
+    def super_parent_syn(self, mol, synonyms_as = 'inchikey', skip_standardize=False):
+        """Return the super parent of a given molecule with InChI(Key)s preserved as properties.
+        
+        :param mol: The input molecule.
+        :param synonyms_as: How should synonyms be kept? (inchi or inchikey)
+        :type mol: rdkit.Chem.rdchem.Mol
+        :param bool skip_standardize: Set to True if mol has already been standardized.
+        :returns: The super parent molecule.
+        :rtype: rdkit.Chem.rdchem.Mol
+        """
+        if not skip_standardize:
+            mol = self.standardize(mol)
+        
+        inchi = {}
+        inchi['fragment_inchi'] = Chem.MolToInchi(mol)
+        mol = self.fragment_parent(mol, skip_standarize=True)
+        inchi['charge_inchi'] = Chem.MolToInchi(mol)
+        mol = self.charge_parent(mol, skip_standardize=True)
+        inchi['isotope_inchi'] = Chem.MolToInchi(mol)
+        mol = self.isotope_parent(mol, skip_standardize=True)
+        inchi['stereo_inchi'] = Chem.MolToInchi(mol)
+        mol = self.stereo_parent(mol, skip_standardize=True)
+        inchi['tautomer_inchi'] = Chem.MolToInchi(mol)
+        mol = self.tautomer_parent(mol, skip_standardize=True)
+        inchi['standardize_inchi'] = Chem.MolToInchi(mol)
+        mol = self.standardize(mol)
+        inchi['inchi'] = Chem.MolToInchi(mol)
+        
+        if synonyms_as == 'inchi':
+            [mol.SetProp(key,inchi[key]) for key in inchi]
+        else:
+            inchikey = {key+'key':Chem.InchiToInchiKey(inchi[key]) for key in inchi}
+            [mol.SetProp(key,inchikey[key]) for key in inchikey]
+        
+        return mol
+    
     def standardize_with_parents(self, mol):
         """"""
         standardized = self.standardize(mol)
