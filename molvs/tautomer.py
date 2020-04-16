@@ -125,8 +125,8 @@ TAUTOMER_TRANSFORMS = (
     # TautomerTransform('formamidinesulfinic acid r', '[O!H0]-[S,Se,Te]-[C]=[O,N]', bonds='=--'),
     TautomerTransform('isocyanide f', '[C-0!H0]#[N+0]', bonds='#', charges='-+'),
     TautomerTransform('isocyanide r', '[N+!H0]#[C-]', bonds='#', charges='-+'),
-    TautomerTransform('phosphonic acid f', '[OH]-[PH0]', bonds='='),
-    TautomerTransform('phosphonic acid r', '[PH]=[O]', bonds='-'),
+    TautomerTransform('phosphinic acid f', '[OH]-[PD3X3H0]', bonds='='),
+    TautomerTransform('phosphinic acid r', '[PD3X3H1]=[O]', bonds='-'),
 )
 
 #: The default list of TautomerScores.
